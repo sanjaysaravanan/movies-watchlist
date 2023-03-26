@@ -33,7 +33,7 @@ const customTheme = createTheme({
         root: {
           // Some CSS
           fontSize: '1rem',
-          borderRadius: '80px'
+          borderRadius: 0
         },
       },
     },
