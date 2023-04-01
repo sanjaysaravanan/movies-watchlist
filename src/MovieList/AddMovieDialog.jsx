@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {
   FormControl,
@@ -32,6 +31,7 @@ export default function AddMovieDialog({
   addMovie,
   currMovie,
   editMovie,
+  cleanForm
 }) {
 
   const [lang, setLang] = useState(currMovie !== undefined ? currMovie.language : 'English');
@@ -48,7 +48,7 @@ export default function AddMovieDialog({
     event.preventDefault();
     var data = {};
 
-    Array.from(event.target.elements).map((element) => {
+    Array.from(event.target.elements).forEach((element) => {
       if (element.nodeName === 'INPUT') {
         if ((element.type === 'radio' && element.checked) || element.type !== 'radio') {
           data[element.name] = element.value;
@@ -60,6 +60,7 @@ export default function AddMovieDialog({
     if (currMovie === undefined) {
       // passing data from child to parent with help of callback function
       addMovie(data);
+      console.log(data);
     } else {
       editMovie(currMovie.title, data);
     }
@@ -71,9 +72,13 @@ export default function AddMovieDialog({
   }
   // Following useEffect sysntax will run when the compoenent is Mounted
   // some actions during only mouting 
-  useEffect(() => {
-    console.log('Line 69', currMovie);
-  }, []);
+  // useEffect(() => {
+  //   console.log('Line 69', currMovie);
+  //   // clean form values -- unmount
+  //   return () => {
+  //     cleanForm();
+  //   }
+  // });
 
   // Actions on Mounting & Updating( props / state inside array changes ) Stage
   useEffect(() => {
@@ -88,7 +93,7 @@ export default function AddMovieDialog({
 
   return (
     <div className="sanjay" >
-      {console.log(currMovie)}
+      {console.log('Clasalsdklhklasdhfklahsd', currMovie)}
       <Dialog
         open={open}
         onClose={handleClose}

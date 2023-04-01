@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Package Imports
 import Fab from '@mui/material/Fab';
@@ -7,25 +7,15 @@ import AddIcon from '@mui/icons-material/Add';
 // Custom Module Import
 import MovieCard from './MovieCard';
 import AddMovieDialog from './AddMovieDialog';
-import { Stack } from '@mui/system';
 
 const MovieList = () => {
-  const data = [
-    { title: 'Veera Simha Reddy (U/A) - Telugu', image: 'https://img.ticketnew.com/tn/movie/26457/6.jpg', language: 'Hindi', rating: 'A', genre: 'Action' },
-    { title: 'Mrs. Chatterjee vs Norway - Hindi', image: 'https://img.ticketnew.com/tn/movie/27120/6.jpg', language: 'Tamil', rating: 'U/A', genre: 'Thriller' },
-    { title: 'Bholaa', image: 'https://img.ticketnew.com/tn/movie/27199/6.jpg', language: 'Tamil', rating: 'U/A', genre: 'Thriller' },
-    { title: 'Bhole', image: 'https://img.ticketnew.com/tn/movie/26814/6.jpg', language: 'Hindi', rating: 'U', genre: 'Romance' },
-    { title: 'John Wick 4', image: 'https://img.ticketnew.com/tn/movie/27153/6.jpg', language: 'English', rating: 'A', genre: 'Action' }
-  ];
-
-
-  const [movies, setMovies] = useState(data);
+  const [movies, setMovies] = useState([]);
   const [open, setOpen] = React.useState(false);
 
   const [currMovie, setCurrMovie] = React.useState(undefined);
 
   const handleClickOpen = () => {
-    setCurrMovie(undefined);
+    setCurrMovie(undefined)
     setOpen(true);
   };
 
@@ -34,12 +24,28 @@ const MovieList = () => {
   };
 
   // callback for child
-  const addMovie = (movieObj) => {
+  const addMovie = async (movieObj) => {
+    console.log('Line 29', movieObj);
     setMovies([...movies, movieObj]);
+    fetch('https://63f9bdce897af748dcc2d723.mockapi.io/movies', {
+      method: 'POST',
+      body: JSON.stringify(movieObj),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
 
   const removeMovie = (movieTitle) => {
-    setMovies(movies.filter(({ title }) => title !== movieTitle))
+    const id = movies.find(({ title }) => title === movieTitle).id;
+    setMovies(movies.filter(({ title }) => title !== movieTitle));
+
+    fetch(`https://63f9bdce897af748dcc2d723.mockapi.io/movies/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 
   const loadMovie = (movieTitle) => {
@@ -59,8 +65,20 @@ const MovieList = () => {
     console.log(newArr);
 
     setMovies(newArr);
-
   }
+
+  const cleanForm = () => {
+    console.log('Cleanfporm')
+    setCurrMovie(undefined);
+  }
+
+  useEffect(() => {
+    fetch('https://63f9bdce897af748dcc2d723.mockapi.io/movies')
+      .then((response) => response.json())
+      .then((data) => setMovies(data));
+  }, [])
+
+
 
   return (
     <>
@@ -105,6 +123,7 @@ const MovieList = () => {
         addMovie={addMovie}
         currMovie={currMovie}
         editMovie={editMovie}
+        cleanForm={cleanForm}
       />
     </>
   )
