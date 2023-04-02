@@ -64,21 +64,21 @@ export default function AddMovieDialog({
     } else {
       editMovie(currMovie.title, data);
     }
-
-
     setLang('English');
     setGenre('Action');
     handleClose();
   }
   // Following useEffect sysntax will run when the compoenent is Mounted
   // some actions during only mouting 
-  // useEffect(() => {
-  //   console.log('Line 69', currMovie);
-  //   // clean form values -- unmount
-  //   return () => {
-  //     cleanForm();
-  //   }
-  // });
+  useEffect(() => {
+    console.log('Line 69', currMovie);
+    // clean form values -- unmount
+    return () => {
+      // unmount stage
+      console.log('Un Mount for Dialog Component')
+      cleanForm();
+    }
+  }); // only on mouting 
 
   // Actions on Mounting & Updating( props / state inside array changes ) Stage
   useEffect(() => {

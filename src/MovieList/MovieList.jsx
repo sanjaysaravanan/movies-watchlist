@@ -15,7 +15,6 @@ const MovieList = () => {
   const [currMovie, setCurrMovie] = React.useState(undefined);
 
   const handleClickOpen = () => {
-    setCurrMovie(undefined)
     setOpen(true);
   };
 
@@ -76,13 +75,14 @@ const MovieList = () => {
     fetch('https://63f9bdce897af748dcc2d723.mockapi.io/movies')
       .then((response) => response.json())
       .then((data) => setMovies(data));
-  }, [])
+    console.log('Mounting Called')
+  }, []);
 
 
 
   return (
     <>
-      {console.log('Movies List', movies)}
+      {/* {console.log('Movies List', movies)} */}
       <Fab
         color="primary"
         aria-label="add"
@@ -116,7 +116,7 @@ const MovieList = () => {
         ))}
       </div>
 
-      <AddMovieDialog
+      {open && <AddMovieDialog
         // passing of data from parent to child
         open={open}
         handleClose={handleClose}
@@ -124,7 +124,7 @@ const MovieList = () => {
         currMovie={currMovie}
         editMovie={editMovie}
         cleanForm={cleanForm}
-      />
+      />}
     </>
   )
 
